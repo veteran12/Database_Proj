@@ -42,23 +42,66 @@
 
 					<!-- BEGIN .left-content-sidebar-wrapper -->
 					<div class="left-content-sidebar-wrapper">
-					  <div class="protitle">
-					    <center><p>Profile</p></center>
-                        </div>
+					  
                         <?php
-									/*session_start();
-									$uid="";
-									$uid=$_SESSION["loged"];*/ //need to add authentification function
+									session_start();
+									$self="";
+									$self=$_SESSION["loged"];
 									$uid = $_REQUEST['id'];
 									$con=mysqli_connect("localhost","root","123456","v2_Adventure");
 									if( mysqli_connect_errno() ){
             							echo "Fail to connect to MySQL: " . mysqli_connect_errno();
             						} 
                 
-                					$sql = "select uname,age,city,email from user where uid = '$uid'";
+                					$sql = "select uid,uname,age,city,email,auth from user where uid = '$uid'";
+                					$result = mysqli_query( $con,$sql );
+                					$row = mysqli_fetch_array($result);
+                					/* auth control */
+    $num = $row['auth'];
+    //$tmpid = $row['uid'];
+    if( $num == 2){
+    	if($uid != $self){
+    	mysqli_close($con);
+       	echo "<script>alert('no permission!');history.go(-1);</script>";
+       	//header("Location:welcome.php");
+       	exit;
+    	}
+    }else if($num == 3){
+    	$sql = "select tmp from (select reqname as tmp from friend where accname= '$uid' union select accname as tmp from friend where reqname='$uid')a where a.tmp = '$self'";
+    	$result = mysqli_query( $con,$sql );                				
+              
+        if ( $result -> num_rows == 0 ) {
+			echo "<script>alert('no permission!');history.go(-1);</script>";
+			//echo "<script>alert('login error!');history.go(-1);</script>";
+       		//header("Location:welcome.php");
+       		exit;
+		}
+    }else if($num == 4){
+    	$sql1 = "select tmp from (select reqname as tmp from friend where accname= '$uid' union select accname as tmp from friend where reqname='$uid')a where a.tmp = '$self'";
+    	$sql2 = "select tmp from (select distinct(reqname) as tmp from friend where accname in (select reqname as reqname from friend where accname='$uid')
+				 					union
+				 					(select accname as reqname from friend where reqname='$uid')
+				 				union
+								select distinct(accname) as tmp from friend where reqname in (select reqname as reqname from friend where accname='$uid')
+									union
+									(select accname as reqname from friend where reqname='$uid'))a where a.tmp = '$self'";
+		$result1 = mysqli_query( $con,$sql1 );
+		$result2 = mysqli_query( $con,$sql2 );
+		if( $result1 ->num_rows == 0 && $result2 ->num_rows == 0 ){
+			echo "<script>alert('no permission!');history.go(-1);</script>";
+       		//header("Location:welcome.php");
+       		exit;
+		}
+    }
+                					
+                					
+                					$sql = "select uid,uname,age,city,email,auth from user where uid = '$uid'";
                 					$result = mysqli_query( $con,$sql );
                 					$row = mysqli_fetch_array($result);
                 		?>
+                		<div class="protitle">
+					    <center><p>Profile</p></center>
+                        </div>
                       <div class="pro">
 						<h2><strong>nickname:<?php echo $row['uname']?> </strong></h2>
 						<br></br>

@@ -54,7 +54,7 @@
             							echo "Fail to connect to MySQL: " . mysqli_connect_errno();
             						} 
                 
-                					$sql = "select uname,age,city,email from user where uid = '$uid'";
+                					$sql = "select uname,age,city,email,auth from user where uid = '$uid'";
                 					$result = mysqli_query( $con,$sql );
                 					$row = mysqli_fetch_array($result);
                 		?>
@@ -66,6 +66,21 @@
 						<h2><strong>city:<?php echo $row['city']?></strong></h2>
 						<br></br>
 						<h2><strong>email:<?php echo $row['email']?></strong></h2>
+						<br></br>
+						<tr><td><h2><strong>security level:
+						<?php 
+							if($row['auth']==1)
+								echo "public";
+							else if($row['auth']==2)
+								echo "private";
+							else if ($row['auth']==3)
+								echo "friend can see";
+							else
+								echo "friend and friend of friend can see";
+						
+						?>
+						</strong></h2></td>
+						<td><a href = "changeauth.php" target="_blank">modify</a></td></tr>
 					</div>
 					<hr/>
 						<!-- BEGIN .left-content -->
@@ -77,18 +92,19 @@
                 
                 					/*$sql = "select title,posttime,content,uid from diary";*/
                 					$sql = "select * from (select * from (select d.did, d.uid, d.title, d.posttime, d.content, count(l.uid) as likes 
-																										from diary d left join likedia l on d.did = l.did group by l.did)m natural join
+																										from diary d left join likedia l on d.did = l.did group by d.did)m natural join
 											(select c.did, count(d.cid) as comments from diary c left join dcomment d on c.did = d.did group by c.did)n order by posttime desc)v where uid='$uid';";
 								   $result = mysqli_query( $con,$sql );                				
               
-               					   if ( $result == false ) {
+               					   if ( $result -> num_rows == 0 ) {
 										echo "<p>no diary post yet!</p>";
                					   }
                					   else{
                					    	while($row = mysqli_fetch_array($result))
   										{
   											echo "<div class=\"item\">";
-  											echo "<h2><a href=\"#\">" . $row['title'] . "</a></h2>";
+  											//echo "<h2><a href=\"#\">" . $row['title'] . "</a></h2>";
+  											echo "<h2><a href=\"showdiary.php?did=" . $row['did'] . "\">" . $row['title'] . "</a></h2>";
   											echo "<div class=\"info\">";
   											echo "<a href=\"#\" class=\"time\">" . $row['uid'] . "@" . $row['posttime'] . "</a>";
   											echo "<a href=\"like.php?did=" . $row['did'] . "\"> likes: " . $row['likes'] . "</a>";

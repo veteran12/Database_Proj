@@ -3,8 +3,7 @@
 <head>
 
 		<!-- Title -->
-		<title>welcome</title>
-
+		<title>message</title>
 		<!-- Meta Tags -->
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
@@ -14,84 +13,6 @@
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="css/main-stylesheet.css" type="text/css" />
 		<link rel="stylesheet" href="css/shortcodes.css" type="text/css" />
-
-		<!-- JavaScripts -->
-		<script src="js/jquery.min.js" type="text/javascript"></script>
-		<script src="js/jquery.placeholder.min.js" type="text/javascript"></script>
-		<script src="js/jquery.sexyslider-blog.js" type="text/javascript"></script>
-		<script src="js/cufon-yui.js" type="text/javascript"></script>
-		<script src="js/cufon-replace.js" type="text/javascript"></script>
-		<script src="js/prima.font.js" type="text/javascript"></script>
-		<script src="js/artpost.font.js" type="text/javascript"></script>
-		<script src="js/jquery.cookie.js" type="text/javascript"></script>
-		<script src="js/scripts.js" type="text/javascript"></script>
-		<script type="text/javascript">
-			jQuery(document).ready(function($){
-				$("#blog-slider").SexySlider({
-					autopause  : true,
-					auto       : true,
-					strips : 10,										 
-					direction : 'left', 
-					effect : 'wave', 
-					onTitleHide     : function() { Cufon.replace('.sexyslider-title a', { textShadow: '#3e0000 0 1px', hover: 'true' } ); } 				
-				});
-			});
-		</script>
-		<script type="text/javascript">
-		jQuery(document).ready(function($){
-		  $.fn.shuffle = function() {
-		    return this.each(function(){
-		      var items = $(this).children();
-		      return (items.length)
-		        ? $(this).html($.shuffle(items))
-		        : this;
-		    });
-		  }
-		 
-		  $.shuffle = function(arr) {
-		    for(
-		      var j, x, i = arr.length; i;
-		      j = parseInt(Math.random() * i),
-		      x = arr[--i], arr[i] = arr[j], arr[j] = x
-		    );
-		    return arr;
-		  }
-		});
-		
-		jQuery(document).ready(function($){
-			$('.bg-swicher').click(function() {
-				var title = jQuery(this).attr("id");
-				$(".bg-swicher").removeClass("active");
-				jQuery(this).addClass("active");
-				
-				
-					if ( title == "random" ) { 
-						var images = ['guitars', 'keyboards', 'drums', 'mics', 'turntable']
-						images = $.shuffle(images);
-						$("#bg-img").attr('class', "deco-"+images[1]);
-					} else { 
-						$("#bg-img").attr('class', "deco-"+title);
-					}
-
-				$.cookie('rockstar-bg-img', title, { expires: 7, path: '/', domain: window.location.host});
-				
-			});
-			
-			if ( $.cookie('rockstar-bg-img') ) {
-				$(".bg-swicher").removeClass("active");
-				$("#"+$.cookie('rockstar-bg-img')).addClass("active");
-			} else {
-				$("#guitars").addClass("active");
-			}
-			
-		});
-		
-		jQuery(document).ready(function($){
-			if ( $.cookie('rockstar-bg-img')) {
-				$("#bg-img").attr('class', "deco-"+$.cookie('rockstar-bg-img'));
-			}
-		});
-		</script>
 	<!-- END head -->
 	</head>
 
@@ -116,6 +37,30 @@
 										<li><a href="newpost.php">Newpost</a></li>
 										<li><a href="location.php">Location</a></li>
 										<li><a href="search.php">Search</a></li>
+										<?php
+											session_start();
+											$uid =  $_SESSION["loged"];
+											$con=mysqli_connect("localhost","root","123456","v2_Adventure");
+											if( mysqli_connect_errno() ){
+            									echo "Fail to connect to MySQL: " . mysqli_connect_errno();
+            									mysqli_close($con);
+            								}
+            								
+            								$sql = "select following,followed from friendreq where followed = '$uid'";
+            								$result = mysqli_query( $con,$sql );
+
+               					   			if ( $result -> num_rows != 0 ) {
+               					   			
+												
+										echo "<li><a href=\"information.php\"><div id=\"blink\">new message</div></a></li>";
+										echo "<script language=\"javascript\">
+												function changeColor(){var color=\"red|black\";
+												color=color.split(\"|\");
+												document.getElementById(\"blink\").style.color=color[parseInt(Math.random() * color.length)];}
+												setInterval(\"changeColor()\",200);
+												</script> ";
+               					   			}
+										?> 
 										<li><a href="logout.php">Logout</a></li>
 									</ul>
 								</td>
@@ -133,44 +78,13 @@
 
 							<!-- BEGIN .blog-list -->
 							<div class="blog-list">
-
-							<!--	<div class="item">
-									<h2><a href="#">Maecenas lacus nunc rutrum vitae phaaretra imperdiet</a></h2>
-									<div class="info">
-										<a href="#" class="time">John Smith @ 09.07.2011</a>
-										<a href="#" class="section">Section</a>
-										<a href="#" class="comment-nr">9 comments</a>
-									</div>
-									<a href="#"><img src="images/image-overlay-520x170.png" alt="" width="520" height="195" style="background: url(images/photos/photo-17.jpg) 0 0 no-repeat;" /></a>
-									<p class="intro">Maecenas neque est, feugiat quis porta in, condimentum eget arcu. Maecenas fringilla aliquam ultricies. Pellentesque vel turpis nec leo tincidunt sollicitudin ac non risus. Ves tibu lum ultrices feugiat velit, quis tincid unt velit volutpat nec. Vivamus pharetra fringilla augue, a elementum ante ultrices tincidunt. Ut mi ligula, interdum ut pharetra.</p>
-									<p><a href="#" class="more-link"><span>Read more</span></a></p>
-								</div> -->
-
 								<?php
-									/*$cname="";
-									$cname=test_input($_REQUEST['name']);*/
-									$con=mysqli_connect("localhost","root","123456","v2_Adventure");
-									if( mysqli_connect_errno() ){
-            							echo "Fail to connect to MySQL: " . mysqli_connect_errno();
-            						} 
-                
-                					/*$sql = "select title,posttime,content,uid from diary";*/
-                					$sql = "select * from (select d.did, d.uid, d.title, d.posttime, d.content, count(l.uid) as likes 
-																										from diary d left join likedia l on d.did = l.did group by l.did)m natural join
-											(select c.did, count(d.cid) as comments from diary c left join dcomment d on c.did = d.did group by c.did)n order by posttime desc;";
-                					$result = mysqli_query( $con,$sql );
-               					    
 									while($row = mysqli_fetch_array($result))
   									{
   										echo "<div class=\"item\">";
-  										echo "<h2><a href=\"#\">" . $row['title'] . "</a></h2>";
-  										echo "<div class=\"info\">";
-  										echo "<a href=\"#\" class=\"time\">" . $row['uid'] . "@" . $row['posttime'] . "</a>";
-  										echo "<a href=\"like.php?did=" . $row['did'] . "\"> likes: " . $row['likes'] . "</a>";
-  										echo "<a> comments: " . $row['comments'] . "</a>"; 
-  										echo "</div>";
-  										echo "<p class=\"intro\">" . $row['content'] . "</p>";
-  										echo "<p><a href=\"\" class=\"more-link\"><span>Read more</span></a></p>";
+  										echo "<p>" . $row['following'] . "</p>";
+  										echo "<table><tr><td><form action=\"accept.php\" method=\"post\"><input type=\"hidden\" name=\"following\" value=\"" . $row['following'] . "\" /><input type=\"submit\" name=\"accept\" value =\"accept\"/></form></td>";
+  										echo "<td><form action=\"deny.php\" method=\"post\"><input type=\"hidden\" name=\"following\" value=\"" . $row['following'] . "\" /><input type=\"submit\" name=\"deny\" value =\"deny\"/></form></td></tr></table>";
   										echo "</div>";
   									}
 									mysqli_close($con);

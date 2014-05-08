@@ -96,12 +96,29 @@
 					</div>		
 		<!-- END .main-content -->
 				</div>
-
-
-
 		<!-- END .main-body-wrapper -->
 		</div>
-
+		<div class = "listlocation">
+			<p>Location List </p>
+			<?php 
+			$con = mysqli_connect("localhost","root","123456","v2_Adventure");
+            if( mysqli_connect_errno() ){
+            	echo "Fail to connect to MySQL: " . mysqli_connect_errno();
+            }
+            $sql = "select lname,longitude,latitude from location";
+            $result = mysqli_query( $con, $sql );    
+            if ( $result -> num_rows == 0 ) {
+				echo "<p>no diary post yet!</p>";
+            }
+            else{
+               while($row = mysqli_fetch_array($result))
+  			   {
+  					echo "<tr><td>" . $row['lname'] . "</td><td>  longitude:" . $row['longitude'] . "</td><td>  latitude:" . $row['latitude'] . "</td></tr>";
+  				}                		
+           }
+		   mysqli_close($con);
+            ?>  
+		</div>
 
 	<!-- END body -->
 <div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
