@@ -47,13 +47,22 @@
 		}
     }else if($num == 4){
     	$sql1 = "select tmp from (select reqname as tmp from friend where accname= '$tmpid' union select accname as tmp from friend where reqname='$tmpid')a where a.tmp = '$uid'";
-    	$sql2 = "select tmp from (select distinct(reqname) as tmp from friend where accname in (select reqname as reqname from friend where accname='$tmpid')
+    	/*$sql2 = "select tmp from (select distinct(reqname) as tmp from friend where accname in (select reqname as reqname from friend where accname='$tmpid')
 				 					union
 				 					(select accname as reqname from friend where reqname='$tmpid')
 				 				union
 								select distinct(accname) as tmp from friend where reqname in (select reqname as reqname from friend where accname='$tmpid')
 									union
-									(select accname as reqname from friend where reqname='$tmpid'))a where a.tmp = '$uid'";
+									(select accname as reqname from friend where reqname='$tmpid'))a where a.tmp = '$uid'";*/
+		
+		$sql2 = "select tmp from (select distinct(reqname) as tmp from friend a join ((select reqname as tmp1 from friend where accname='$tmpid')
+union
+(select accname as tmp1 from friend where reqname='$tmpid'))b on a.accname=b.tmp1
+union
+select distinct(accname) as tmp from friend c join ((select reqname as tmp2 from friend where accname='$tmpid')
+union
+(select accname as tmp2 from friend where reqname='$tmpid'))d on c.reqname = d.tmp2) e where e.tmp='$uid'";
+		
 		$result1 = mysqli_query( $con,$sql1 );
 		$result2 = mysqli_query( $con,$sql2 );
 		if( $result1 ->num_rows == 0 && $result2 ->num_rows == 0 ){
@@ -68,7 +77,7 @@
 <head>
 
 		<!-- Title -->
-		<title><?php echo '$did' . "diary"?></title>
+		<title><?php echo $did . "diary"?></title>
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="css/main-stylesheet.css" type="text/css" />
 		<link rel="stylesheet" href="css/shortcodes.css" type="text/css" />

@@ -19,14 +19,15 @@
                 
     $sql = "select lname from location";
     $result = mysqli_query( $con,$sql );
-
+	$html = "";
+	
 	while($row = mysqli_fetch_array($result))
   	{
-  		$html = "<input type=checkbox name=\"location\" value=\"" . $row['lname'] . "\">" . $row['lname'] . "<br>";									
+  		$html .= "<input type=checkbox name=\"location\" value=\"" . $row['lname'] . "\">" . $row['lname'] . "<br>";									
   	}
 	
 	echo "<form action = \"selectlocation.php\" method = \"post\" >";
-	echo $html;
+	echo $html . "</input>";
 	echo "<input type = \"submit\" name=\"select\" value = \"submit\">";
 	mysqli_close($con);
 ?>

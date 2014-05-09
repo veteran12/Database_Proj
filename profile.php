@@ -28,6 +28,7 @@
 									<ul>
 										<li><a href="welcome.php">Homepage</a></li>
 										<li><a href="profile.php">Profile</a></li>
+										<li><a href="friend.php">Friend</a></li>
 										<li><a href="newpost.php">Newpost</a></li>
 										<li><a href="location.php">Location</a></li>
 										<li><a href="search.php">Search</a></li>
@@ -47,6 +48,10 @@
                         </div>
                         <?php
 									session_start();
+									if ( !isset( $_SESSION["loged"] ) ){
+											header("Location:login.php");
+											exit();
+											}
 									$uid="";
 									$uid=$_SESSION["loged"];
 									$con=mysqli_connect("localhost","root","123456","v2_Adventure");

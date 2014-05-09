@@ -19,7 +19,7 @@
  <head>
   <title> </title>
  </head>
- <body>
+ <body background="images/v2.jpg" style="background-repeat:no-repeat">
  	<form action="logincheck.php" method="post">
  		username: <input type="text", name="username" />
  		<br/>

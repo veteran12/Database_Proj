@@ -11,6 +11,10 @@
 	</head>
 	<?php
 	session_start();
+	if ( !isset( $_SESSION["loged"] ) ){
+											header("Location:login.php");
+											exit();
+											}
 	if(isset($_POST["newevent"]) && $_POST["newevent"] == "submit")  {
 		$aname = $_POST["aname"];  
         $des = $_POST["des"]; 
@@ -98,7 +102,7 @@
                       <br/>
                       description:
                       <br/>
-                     <textarea name="des" cols="80" rows="20"></textarea>
+                     <textarea name="des" cols="80" rows="10"></textarea>
                       <br/>
  						location: 
                       <a href = "selectlocation.php" target="_blank">select location</a>

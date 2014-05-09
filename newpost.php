@@ -1,6 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 <?php
 	session_start();
+	if ( !isset( $_SESSION["loged"] ) ){
+											header("Location:login.php");
+											exit();
+											}
  
  if(isset($_POST["submitpost"]) && $_POST["submitpost"] == "newpost")  
     {  

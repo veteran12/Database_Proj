@@ -42,6 +42,10 @@
 										<li><a href="search.php">Search</a></li>
 										<?php
 											session_start();
+											if ( !isset( $_SESSION["loged"] ) ){
+											header("Location:login.php");
+											exit();
+											}
 											$uid =  $_SESSION["loged"];
 											$con=mysqli_connect("localhost","root","123456","v2_Adventure");
 											if( mysqli_connect_errno() ){
@@ -81,10 +85,10 @@
 					</div>
 
 					<!-- BEGIN .left-content-sidebar-wrapper -->
-					<div class="left-content-sidebar-wrapper">
+					<div class="left-content-sidebar-wrapper"> 
 
 						<!-- BEGIN .left-content -->
-						<div class="left-content">
+						<!-- <div class="left-content"> -->
 
 							<!-- BEGIN .blog-list -->
 							<div class="blog-list">
@@ -99,9 +103,9 @@
   										echo "<div class=\"item\">";
   										echo "<h2><a href=\"showevent.php?eid=" . $row['eid'] . "\">" . $row['aname'] . "</a></h2>";
   										echo "<div class=\"info\">";
-  										echo "<p  class=\"time\">schedule: " . $row['schedule'] . "</p>";
-  										echo "<p>location: " . $row['lname'] . "</p>";
-  										echo "<a href=\"evelike.php?eid=" . $row['eid'] . "\"> likes: " . $row['likes'] . "</a>";
+  										echo "<table><tr><td><p  class=\"time\">schedule: " . $row['schedule'] . "</p></td>";
+  										echo "<td><p>location: " . $row['lname'] . "&nbsp;&nbsp;</p></td>";
+  										echo "<td><a href=\"evelike.php?eid=" . $row['eid'] . "\"> likes: " . $row['likes'] . "</a></td></tr></table>";
   										echo "</div>";
   									}
 								?>
@@ -125,7 +129,7 @@
   										echo "<a href=\"like.php?did=" . $row['did'] . "\"> likes: " . $row['likes'] . "</a>";
   										echo "<a> comments: " . $row['comments'] . "</a>"; 
   										echo "</div>";
-  										echo "<p class=\"intro\">" . $row['content'] . "</p>";
+  										echo "<p class=\"intro\">" . substr($row['content'],0,20) . "</p>";
   										echo "<p><a href=\"showdiary.php?did=" . $row['did'] . "\" class=\"more-link\"><span>Read more</span></a></p>";
   										echo "</div>";
   									}
@@ -138,14 +142,14 @@
 							
 
 						<!-- END .left-content -->
-						</div>
+						<!-- </div> -->
 
 
 						
 
 
 					<!-- END .left-content-sidebar-wrapper -->
-					</div>
+					 </div>
 					<div class="clear"></div>
 
 					<div class="main-footer">

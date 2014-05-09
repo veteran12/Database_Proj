@@ -78,13 +78,23 @@
 		}
     }else if($num == 4){
     	$sql1 = "select tmp from (select reqname as tmp from friend where accname= '$uid' union select accname as tmp from friend where reqname='$uid')a where a.tmp = '$self'";
-    	$sql2 = "select tmp from (select distinct(reqname) as tmp from friend where accname in (select reqname as reqname from friend where accname='$uid')
+    	/*$sql2 = "select tmp from (select distinct(reqname) as tmp from friend where accname in (select reqname as reqname from friend where accname='$uid')
 				 					union
 				 					(select accname as reqname from friend where reqname='$uid')
 				 				union
 								select distinct(accname) as tmp from friend where reqname in (select reqname as reqname from friend where accname='$uid')
 									union
-									(select accname as reqname from friend where reqname='$uid'))a where a.tmp = '$self'";
+									(select accname as reqname from friend where reqname='$uid'))a where a.tmp = '$self'";*/
+		$sql2 = "select tmp from (select distinct(reqname) as tmp from friend a join ((select reqname as tmp1 from friend where accname='$uid')
+union
+(select accname as tmp1 from friend where reqname='$uid'))b on a.accname=b.tmp1
+union
+select distinct(accname) as tmp from friend c join ((select reqname as tmp2 from friend where accname='$uid')
+union
+(select accname as tmp2 from friend where reqname='$uid'))d on c.reqname = d.tmp2) e where e.tmp='$self'";
+		
+		
+		
 		$result1 = mysqli_query( $con,$sql1 );
 		$result2 = mysqli_query( $con,$sql2 );
 		if( $result1 ->num_rows == 0 && $result2 ->num_rows == 0 ){

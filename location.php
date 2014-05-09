@@ -1,5 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 <?php	session_start();
+if ( !isset( $_SESSION["loged"] ) ){
+											header("Location:login.php");
+											exit();
+											}
  
  if(isset($_POST["newlocation"]) && $_POST["newlocation"] == "submit")  
     {  
@@ -114,6 +117,7 @@
                while($row = mysqli_fetch_array($result))
   			   {
   					echo "<tr><td>" . $row['lname'] . "</td><td>  longitude:" . $row['longitude'] . "</td><td>  latitude:" . $row['latitude'] . "</td></tr>";
+  					echo "<br/>";
   				}                		
            }
 		   mysqli_close($con);

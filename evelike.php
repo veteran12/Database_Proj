@@ -11,5 +11,5 @@ session_start();
     
     mysqli_query( $con, $sql );
     mysqli_close($con);
-    header("Location:welcome.php");
+    header("Location:event.php");
 ?>

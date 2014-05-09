@@ -37,12 +37,15 @@
 					<!-- END .main-menu -->
 					</div>
 					<div class = "mayknow">
-						<p>Maybe Know</p>
+						<p>Person maybe Know</p>
 						
 					</div>
 <?php	
 session_start();
- 
+ if ( !isset( $_SESSION["loged"] ) ){
+											header("Location:login.php");
+											exit();
+											}
  if(isset($_POST["search"]) && $_POST["search"] == "submit")  
     {  
         $uid = $_POST["uid"];  
@@ -97,8 +100,12 @@ session_start();
   				} 
             }
             /*echo $sql;*/
+            echo "------------------------------";
             mysqli_close($con);  
-        }    
+        }  
+        
+        
+ 
     
 ?>
 					<div class = "map">
@@ -117,8 +124,69 @@ session_start();
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="reset" name="reset" value="reset"/>
 					</form>
-					</div>		
+					</div>	
+				<hr>	
 		<!-- END .main-content -->
+		<?php
+		
+ 
+        if(isset($_POST["keysearch"]) && $_POST["keysearch"] == "submit")  
+    {  
+        $key = $_POST["keyword"];    
+        $suid="";
+		$suid=$_SESSION["loged"];
+        $sql = "";
+        if( $key == "" )  
+        {  
+             $sql = "select did,title,posttime,content,uid from diary";
+        }  
+        else  
+        {  
+        	$sql = "select did,title,posttime,content,uid from diary where content like '%$key%'";
+        }
+        	
+            $con = mysqli_connect("localhost","root","123456","v2_Adventure");
+            if( mysqli_connect_errno() ){
+            	echo "Fail to connect to MySQL: " . mysqli_connect_errno();
+            }
+
+            $result = mysqli_query( $con, $sql );    
+            if( $result == false )  
+            {  
+                echo "<p>no diary found!</p>"; 
+            }  
+            else  
+            {  
+            	while($row = mysqli_fetch_array($result))
+  				{
+ 					echo "<div class=\"item\">";
+  										echo "<h2><a href=\"showdiary.php?did=" . $row['did'] . "\">" . $row['title'] . "</a></h2>";
+  										echo "<div class=\"info\">";
+  										echo "<p  class=\"time\">" . $row['uid'] . "@" . $row['posttime'] . "</p>";
+  										echo "</div>";
+  										echo "<p class=\"intro\">" . substr($row['content'],0,20) . "</p>";
+  										echo "<p><a href=\"showdiary.php?did=" . $row['did'] . "\" class=\"more-link\"><span>Read more</span></a></p>";
+  										echo "</div>";
+  										echo "<br/>";
+  										echo "<br/>";
+  										echo "<br/>";
+  				} 
+            }
+            /*echo $sql;*/
+            echo "<br/>";
+            echo "------------------------------";
+            mysqli_close($con);  
+        } 
+		?>
+		<form action="search.php" method="post">
+ 						Keyword:         
+                      <input name="keyword" type="text" size="50", />
+                      <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 						<input type="submit" name="keysearch" value="submit"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="reset" name="reset" value="reset"/>
+					</form>
 				</div>
 
 
